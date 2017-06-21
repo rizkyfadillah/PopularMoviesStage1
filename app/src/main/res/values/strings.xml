@@ -5,4 +5,7 @@
     <string name="image_user_rating">Image User Rating</string>
     <string name="poster_image">Poster Image</string>
     <string name="backdrop_image">Backdrop Image</string>
+    <string name="filter">filter</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
 </resources>

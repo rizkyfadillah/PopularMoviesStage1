@@ -6,7 +6,12 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.rizkyfadillah.popularmoviesstage1.PopularMoviesStage1App;
 import com.rizkyfadillah.popularmoviesstage1.R;
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
     private MovieAdapter movieAdapter;
 
     @BindView(R.id.recylerview) RecyclerView recyclerView;
+    @BindView(R.id.progressbar) ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,29 +56,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
 
         setupActivityComponent();
 
-        bind();
-    }
-
-    private void bind() {
-        viewmodel.getPopularMovies()
-                .subscribe(new ResourceObserver<MovieResponse>() {
-                    @Override
-                    public void onNext(MovieResponse movie) {
-                        movieImageList.add(movie.poster_path);
-                        movieList.add(movie);
-                        movieAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        showPopularMovies();
     }
 
     private void setupActivityComponent() {
@@ -99,4 +83,95 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
 
         startActivity(intent, options.toBundle());
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+
+        menu.findItem(R.id.popular).setChecked(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.top_rated:
+                if (item.isChecked())
+                    item.setChecked(false);
+                else {
+                    item.setChecked(true);
+                    showTopRatedMovies();
+                }
+                return true;
+            case R.id.popular:
+                if (item.isChecked())
+                    item.setChecked(false);
+                else {
+                    item.setChecked(true);
+                    showPopularMovies();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showPopularMovies() {
+        progressBar.setVisibility(View.VISIBLE);
+
+        movieList.clear();
+        movieImageList.clear();
+
+        viewmodel.getPopularMovies()
+                .subscribe(new ResourceObserver<MovieResponse>() {
+                    @Override
+                    public void onNext(MovieResponse movie) {
+                        progressBar.setVisibility(View.GONE);
+                        movieImageList.add(movie.poster_path);
+                        movieList.add(movie);
+                        movieAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    private void showTopRatedMovies() {
+        progressBar.setVisibility(View.VISIBLE);
+
+        movieList.clear();
+        movieImageList.clear();
+
+        viewmodel.getTopRatedMovies()
+                .subscribe(new ResourceObserver<MovieResponse>() {
+                    @Override
+                    public void onNext(MovieResponse movie) {
+                        progressBar.setVisibility(View.GONE);
+                        movieImageList.add(movie.poster_path);
+                        movieList.add(movie);
+                        movieAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+    }
+
 }

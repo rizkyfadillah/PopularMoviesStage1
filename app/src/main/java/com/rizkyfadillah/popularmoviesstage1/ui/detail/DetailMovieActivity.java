@@ -54,6 +54,7 @@ public class DetailMovieActivity extends AppCompatActivity {
 
         Picasso.with(this)
                 .load("http://image.tmdb.org/t/p/w780" + posterPath)
+                .placeholder(R.color.colorImagePlaceholder)
                 .into(posterImage, new Callback() {
                     @Override
                     public void onSuccess() {

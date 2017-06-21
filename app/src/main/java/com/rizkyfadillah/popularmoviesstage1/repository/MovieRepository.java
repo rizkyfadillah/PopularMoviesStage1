@@ -37,4 +37,16 @@ public class MovieRepository {
                 });
     }
 
+    public Observable<MovieResponse> getTopRatedMovies() {
+        return service.getTopRatedMovies(Constants.API_KEY)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapIterable(new Function<BaseApiResponse<List<MovieResponse>>, Iterable<? extends MovieResponse>>() {
+                    @Override
+                    public Iterable<? extends MovieResponse> apply(BaseApiResponse<List<MovieResponse>> response) throws Exception {
+                        return response.results;
+                    }
+                });
+    }
+
 }

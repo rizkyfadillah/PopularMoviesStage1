@@ -4,5 +4,5 @@
     android:layout_height="wrap_content"
     android:transitionName="movieImage"
     android:adjustViewBounds="true"
-    android:src="@mipmap/ic_launcher"
+    android:src="@color/colorImagePlaceholder"
     xmlns:android="http://schemas.android.com/apk/res/android" />

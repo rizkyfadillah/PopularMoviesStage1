@@ -12,13 +12,20 @@ import io.reactivex.Observable;
 
 public class MainViewModel {
 
-    private Observable<MovieResponse> movies;
+    private Observable<MovieResponse> popularMovies;
+    private Observable<MovieResponse> topRatedMovies;
 
     MainViewModel(MovieRepository movieRepository) {
-        movies = movieRepository.getPopularMovies();
+        popularMovies = movieRepository.getPopularMovies();
+        topRatedMovies = movieRepository.getTopRatedMovies();
     }
 
     Observable<MovieResponse> getPopularMovies() {
-        return movies;
+        return popularMovies;
     }
+
+    public Observable<MovieResponse> getTopRatedMovies() {
+        return topRatedMovies;
+    }
+
 }

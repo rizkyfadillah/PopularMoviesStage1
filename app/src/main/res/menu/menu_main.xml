@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single"
+        android:id="@+id/radio">
+        <item android:id="@+id/popular"
+            android:title="@string/popular" />
+        <item android:id="@+id/top_rated"
+            android:title="@string/top_rated" />
+    </group>
+</menu>

@@ -62,6 +62,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
             mPosition = position;
             Picasso.with(mContext)
                     .load("http://image.tmdb.org/t/p/w185" + imageUrl)
+                    .placeholder(R.color.colorImagePlaceholder)
                     .into(imageMovie);
         }
 
