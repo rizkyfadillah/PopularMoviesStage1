@@ -1,8 +1,5 @@
 package com.rizkyfadillah.popularmoviesstage1.api;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by Rizky Fadillah on 15/06/2017.
  * Android Developer

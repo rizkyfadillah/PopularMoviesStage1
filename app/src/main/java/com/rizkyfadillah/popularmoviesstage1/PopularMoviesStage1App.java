@@ -3,9 +3,7 @@ package com.rizkyfadillah.popularmoviesstage1;
 import android.app.Application;
 
 import com.rizkyfadillah.popularmoviesstage1.di.AppComponent;
-import com.rizkyfadillah.popularmoviesstage1.di.AppModule;
 import com.rizkyfadillah.popularmoviesstage1.di.DaggerAppComponent;
-import com.rizkyfadillah.popularmoviesstage1.di.MovieDBApiModule;
 
 /**
  * Created by Rizky Fadillah on 15/06/2017.

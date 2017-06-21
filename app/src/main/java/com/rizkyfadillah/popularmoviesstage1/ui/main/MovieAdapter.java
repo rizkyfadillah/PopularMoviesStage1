@@ -1,7 +1,6 @@
 package com.rizkyfadillah.popularmoviesstage1.ui.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,7 @@ import java.util.List;
  * Android Developer
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
+class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
 
     private List<String> urlImageList;
 
@@ -26,7 +25,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     private OnClickMovieListener mCallback;
 
-    public MovieAdapter(OnClickMovieListener callback, List<String> urlImageList) {
+    MovieAdapter(OnClickMovieListener callback, List<String> urlImageList) {
         this.urlImageList = urlImageList;
         mCallback = callback;
     }

@@ -24,7 +24,7 @@ public class MovieDBApiModule {
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkhttpClient() {
+    OkHttpClient provideOkhttpClient() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -37,7 +37,7 @@ public class MovieDBApiModule {
 
     @Provides
     @Singleton
-    public Retrofit provideRestAdapter(OkHttpClient okHttpClient) {
+    Retrofit provideRestAdapter(OkHttpClient okHttpClient) {
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.client(okHttpClient)
                 .baseUrl("https://api.themoviedb.org")
@@ -48,7 +48,7 @@ public class MovieDBApiModule {
 
     @Provides
     @Singleton
-    public MovieDBService provideMovieDBService(Retrofit restAdapter) {
+    MovieDBService provideMovieDBService(Retrofit restAdapter) {
         return restAdapter.create(MovieDBService.class);
     }
 

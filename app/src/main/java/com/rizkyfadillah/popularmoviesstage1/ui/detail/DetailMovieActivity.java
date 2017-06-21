@@ -1,27 +1,20 @@
 package com.rizkyfadillah.popularmoviesstage1.ui.detail;
 
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.rizkyfadillah.popularmoviesstage1.PopularMoviesStage1App;
 import com.rizkyfadillah.popularmoviesstage1.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailMovieActivity extends AppCompatActivity {
-
-    @Inject
-    DetailMovieViewModel viewmodel;
 
     @BindView(R.id.backdrop) ImageView backdrop;
     @BindView(R.id.poster_image) ImageView posterImage;
@@ -39,9 +32,6 @@ public class DetailMovieActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        setupActivityComponent();
-
-        String id = getIntent().getStringExtra("id");
         String posterPath = getIntent().getStringExtra("poster_path");
         String backdropPath = getIntent().getStringExtra("backdrop_path");
         String overview = getIntent().getStringExtra("overview");
@@ -55,8 +45,6 @@ public class DetailMovieActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(originalTitle);
         }
-
-//        toolbar.setTitle(originalTitle);
 
         Picasso.with(this)
                 .load("http://image.tmdb.org/t/p/w780" + backdropPath)
@@ -83,13 +71,6 @@ public class DetailMovieActivity extends AppCompatActivity {
         txtRating.setText(String.valueOf(voteAverage));
         txtVoteCount.setText(String.valueOf(voteCount));
         txtReleaseDate.setText(getResources().getString(R.string.release_date, releaseDate));
-    }
-
-    private void setupActivityComponent() {
-        PopularMoviesStage1App.get()
-                .getAppComponent()
-                .plus(new DetailMovieActivityModule())
-                .inject(this);
     }
 
     @Override

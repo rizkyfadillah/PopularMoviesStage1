@@ -1,6 +1,5 @@
 package com.rizkyfadillah.popularmoviesstage1.ui.main;
 
-import com.rizkyfadillah.popularmoviesstage1.MovieDBService;
 import com.rizkyfadillah.popularmoviesstage1.di.ActivityScope;
 import com.rizkyfadillah.popularmoviesstage1.repository.MovieRepository;
 
@@ -13,12 +12,6 @@ import dagger.Provides;
  */
 @Module
 public class MainActivityModule {
-
-//    @Provides
-//    @ActivityScope
-//    MovieRepository provideMovieRepository(MovieDBService movieDBService) {
-//        return new MovieRepository(movieDBService);
-//    }
 
     @Provides
     @ActivityScope

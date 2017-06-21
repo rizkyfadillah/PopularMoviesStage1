@@ -37,10 +37,4 @@ public class MovieRepository {
                 });
     }
 
-    public Observable<MovieResponse> getMovieDetail() {
-        return service.getMovieDetail(Constants.API_KEY)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
 }

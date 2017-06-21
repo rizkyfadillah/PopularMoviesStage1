@@ -14,11 +14,11 @@ public class MainViewModel {
 
     private Observable<MovieResponse> movies;
 
-    public MainViewModel(MovieRepository movieRepository) {
+    MainViewModel(MovieRepository movieRepository) {
         movies = movieRepository.getPopularMovies();
     }
 
-    public Observable<MovieResponse> getPopularMovies() {
+    Observable<MovieResponse> getPopularMovies() {
         return movies;
     }
 }

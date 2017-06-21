@@ -19,7 +19,4 @@ public interface MovieDBService {
     @GET("3/movie/popular")
     Observable<BaseApiResponse<List<MovieResponse>>> getPopularMovies(@Query("api_key") String apiKey);
 
-    @GET("3/movie/{movie_id}")
-    Observable<MovieResponse> getMovieDetail(@Query("api_key") String apiKey);
-
 }
