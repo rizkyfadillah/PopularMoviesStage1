@@ -1,5 +1,7 @@
 package com.rizkyfadillah.popularmoviesstage1.api;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Rizky Fadillah on 15/06/2017.
  * Android Developer
@@ -7,13 +9,28 @@ package com.rizkyfadillah.popularmoviesstage1.api;
 
 public class MovieResponse {
 
+    @SerializedName("id")
     public String id;
-    public String original_title;
-    public String poster_path;
-    public String backdrop_path;
+
+    @SerializedName("original_title")
+    public String originalTitle;
+
+    @SerializedName("poster_path")
+    public String posterPath;
+
+    @SerializedName("backdrop_path")
+    public String backdropPath;
+
+    @SerializedName("overview")
     public String overview;
-    public String release_date;
-    public int vote_count;
-    public double vote_average;
+
+    @SerializedName("release_date")
+    public String releaseDate;
+
+    @SerializedName("vote_count")
+    public int voteCount;
+
+    @SerializedName("vote_average")
+    public double voteAverage;
 
 }

@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
     android:fitsSystemWindows="true"
     tools:context="com.rizkyfadillah.popularmoviesstage1.ui.detail.DetailMovieActivity">
 
@@ -37,8 +36,8 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_marginRight="24dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginRight="@dimen/margin_24dp"
+                android:layout_marginEnd="@dimen/margin_24dp"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -56,13 +55,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
+            android:padding="@dimen/margin_16dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/margin_16dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -77,23 +76,23 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="@dimen/margin_16dp"
+                    android:layout_marginStart="@dimen/margin_16dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="@dimen/margin_16dp"
                         android:textColor="@android:color/black"
                         android:id="@+id/text_title"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/text_sz_24sp"
                         tools:text="Forrest Gump"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/text_sz_16sp"
                         android:id="@+id/text_release_date"
                         tools:text="Release date: "/>
 
@@ -104,13 +103,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/margin_16dp"
                 android:background="@color/colorImagePlaceholder"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/margin_16dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -162,7 +161,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/margin_16dp"
                 android:background="@color/colorImagePlaceholder"/>
 
             <TextView
@@ -170,7 +169,7 @@
                 android:layout_height="wrap_content"
                 tools:text="Synopsis"
                 android:gravity="center"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_sz_16sp"
                 android:id="@+id/text_synopsis"
                 android:lineSpacingExtra="8dp" />
 
