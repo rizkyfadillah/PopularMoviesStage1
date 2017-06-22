@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -16,10 +17,7 @@ import retrofit2.http.Query;
 
 public interface MovieDBService {
 
-    @GET("3/movie/popular")
-    Observable<BaseApiResponse<List<MovieResponse>>> getPopularMovies(@Query("api_key") String apiKey);
-
-    @GET("3/movie/top_rated")
-    Observable<BaseApiResponse<List<MovieResponse>>> getTopRatedMovies(@Query("api_key") String apiKey);
+    @GET("3/movie/{sort}")
+    Observable<BaseApiResponse<List<MovieResponse>>> getMovies(@Path("sort") String sort, @Query("api_key") String apiKey);
 
 }

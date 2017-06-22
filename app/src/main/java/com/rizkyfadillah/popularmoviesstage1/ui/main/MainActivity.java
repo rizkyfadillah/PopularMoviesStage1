@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
 
         setupActivityComponent();
 
-        showPopularMovies();
+        showMovies("popular");
     }
 
     private void setupActivityComponent() {
@@ -69,14 +69,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
     @Override
     public void onClickMovie(int position, ImageView imageView) {
         Intent intent = new Intent(this, DetailMovieActivity.class);
-        intent.putExtra("poster_path", movieList.get(position).poster_path);
+        intent.putExtra("poster_path", movieList.get(position).posterPath);
         intent.putExtra("id", movieList.get(position).id);
-        intent.putExtra("original_title", movieList.get(position).original_title);
+        intent.putExtra("original_title", movieList.get(position).originalTitle);
         intent.putExtra("overview", movieList.get(position).overview);
-        intent.putExtra("release_date", movieList.get(position).release_date);
-        intent.putExtra("vote_average", movieList.get(position).vote_average);
-        intent.putExtra("vote_count", movieList.get(position).vote_count);
-        intent.putExtra("backdrop_path", movieList.get(position).backdrop_path);
+        intent.putExtra("release_date", movieList.get(position).releaseDate);
+        intent.putExtra("vote_average", movieList.get(position).voteAverage);
+        intent.putExtra("vote_count", movieList.get(position).voteCount);
+        intent.putExtra("backdrop_path", movieList.get(position).backdropPath);
 
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(this, imageView, "movieImage");
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                     item.setChecked(false);
                 else {
                     item.setChecked(true);
-                    showTopRatedMovies();
+                    showMovies("top_rated");
                 }
                 return true;
             case R.id.popular:
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                     item.setChecked(false);
                 else {
                     item.setChecked(true);
-                    showPopularMovies();
+                    showMovies("popular");
                 }
                 return true;
             default:
@@ -118,18 +118,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
         }
     }
 
-    private void showPopularMovies() {
+    private void showMovies(String sort) {
         progressBar.setVisibility(View.VISIBLE);
 
         movieList.clear();
         movieImageList.clear();
 
-        viewmodel.getPopularMovies()
+        viewmodel.getMovies(sort)
                 .subscribe(new ResourceObserver<MovieResponse>() {
                     @Override
                     public void onNext(MovieResponse movie) {
                         progressBar.setVisibility(View.GONE);
-                        movieImageList.add(movie.poster_path);
+                        movieImageList.add(movie.posterPath);
                         movieList.add(movie);
                         movieAdapter.notifyDataSetChanged();
                     }
@@ -137,34 +137,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                     @Override
                     public void onError(Throwable e) {
 
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
-    }
-
-    private void showTopRatedMovies() {
-        progressBar.setVisibility(View.VISIBLE);
-
-        movieList.clear();
-        movieImageList.clear();
-
-        viewmodel.getTopRatedMovies()
-                .subscribe(new ResourceObserver<MovieResponse>() {
-                    @Override
-                    public void onNext(MovieResponse movie) {
-                        progressBar.setVisibility(View.GONE);
-                        movieImageList.add(movie.poster_path);
-                        movieList.add(movie);
-                        movieAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override

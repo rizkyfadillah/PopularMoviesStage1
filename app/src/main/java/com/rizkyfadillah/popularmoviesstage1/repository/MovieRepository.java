@@ -1,6 +1,6 @@
 package com.rizkyfadillah.popularmoviesstage1.repository;
 
-import com.rizkyfadillah.popularmoviesstage1.Constants;
+import com.rizkyfadillah.popularmoviesstage1.BuildConfig;
 import com.rizkyfadillah.popularmoviesstage1.MovieDBService;
 import com.rizkyfadillah.popularmoviesstage1.api.BaseApiResponse;
 import com.rizkyfadillah.popularmoviesstage1.api.MovieResponse;
@@ -25,20 +25,8 @@ public class MovieRepository {
         this.service = service;
     }
 
-    public Observable<MovieResponse> getPopularMovies() {
-        return service.getPopularMovies(Constants.API_KEY)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMapIterable(new Function<BaseApiResponse<List<MovieResponse>>, Iterable<? extends MovieResponse>>() {
-                    @Override
-                    public Iterable<? extends MovieResponse> apply(BaseApiResponse<List<MovieResponse>> response) throws Exception {
-                        return response.results;
-                    }
-                });
-    }
-
-    public Observable<MovieResponse> getTopRatedMovies() {
-        return service.getTopRatedMovies(Constants.API_KEY)
+    public Observable<MovieResponse> getMovies(String sort) {
+        return service.getMovies(sort, BuildConfig.THE_MOVIE_DB_API_TOKEN)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable(new Function<BaseApiResponse<List<MovieResponse>>, Iterable<? extends MovieResponse>>() {

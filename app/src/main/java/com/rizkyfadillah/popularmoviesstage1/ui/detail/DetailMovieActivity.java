@@ -32,46 +32,50 @@ public class DetailMovieActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        String posterPath = getIntent().getStringExtra("poster_path");
-        String backdropPath = getIntent().getStringExtra("backdrop_path");
-        String overview = getIntent().getStringExtra("overview");
-        String originalTitle = getIntent().getStringExtra("original_title");
-        String releaseDate = getIntent().getStringExtra("release_date");
-        double voteAverage = getIntent().getDoubleExtra("vote_average", 0);
-        double voteCount = getIntent().getIntExtra("vote_count", 0);
-
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(originalTitle);
+
+        if (getIntent().getExtras() != null) {
+            String posterPath = getIntent().getStringExtra("poster_path");
+            String backdropPath = getIntent().getStringExtra("backdrop_path");
+            String overview = getIntent().getStringExtra("overview");
+            String originalTitle = getIntent().getStringExtra("original_title");
+            String releaseDate = getIntent().getStringExtra("release_date");
+            double voteAverage = getIntent().getDoubleExtra("vote_average", 0);
+            double voteCount = getIntent().getIntExtra("vote_count", 0);
+
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setTitle(originalTitle);
+            }
+
+            Picasso.with(this)
+                    .load("http://image.tmdb.org/t/p/w780" + backdropPath)
+                    .fit()
+                    .centerCrop()
+                    .into(backdrop);
+
+            Picasso.with(this)
+                    .load("http://image.tmdb.org/t/p/w780" + posterPath)
+                    .placeholder(R.color.colorImagePlaceholder)
+                    .into(posterImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            supportStartPostponedEnterTransition();
+                        }
+
+                        @Override
+                        public void onError() {
+                            supportStartPostponedEnterTransition();
+                        }
+                    });
+
+            txtSynopsis.setText(overview);
+            txtTitle.setText(originalTitle);
+            txtRating.setText(String.valueOf(voteAverage));
+            txtVoteCount.setText(String.valueOf(voteCount));
+            txtReleaseDate.setText(getResources().getString(R.string.release_date, releaseDate));
         }
 
-        Picasso.with(this)
-                .load("http://image.tmdb.org/t/p/w780" + backdropPath)
-                .fit()
-                .centerCrop()
-                .into(backdrop);
-
-        Picasso.with(this)
-                .load("http://image.tmdb.org/t/p/w780" + posterPath)
-                .placeholder(R.color.colorImagePlaceholder)
-                .into(posterImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        supportStartPostponedEnterTransition();
-                    }
-
-                    @Override
-                    public void onError() {
-                        supportStartPostponedEnterTransition();
-                    }
-                });
-
-        txtSynopsis.setText(overview);
-        txtTitle.setText(originalTitle);
-        txtRating.setText(String.valueOf(voteAverage));
-        txtVoteCount.setText(String.valueOf(voteCount));
-        txtReleaseDate.setText(getResources().getString(R.string.release_date, releaseDate));
     }
 
     @Override

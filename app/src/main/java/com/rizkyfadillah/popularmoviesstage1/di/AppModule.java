@@ -3,8 +3,6 @@ package com.rizkyfadillah.popularmoviesstage1.di;
 import android.app.Application;
 import android.content.Context;
 
-import com.rizkyfadillah.popularmoviesstage1.repository.MovieRepository;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
