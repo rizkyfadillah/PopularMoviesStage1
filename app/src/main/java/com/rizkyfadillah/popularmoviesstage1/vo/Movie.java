@@ -1,4 +1,4 @@
-package com.rizkyfadillah.popularmoviesstage1.api;
+package com.rizkyfadillah.popularmoviesstage1.vo;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Android Developer
  */
 
-public class MovieResponse {
+public class Movie {
 
     @SerializedName("id")
     public String id;

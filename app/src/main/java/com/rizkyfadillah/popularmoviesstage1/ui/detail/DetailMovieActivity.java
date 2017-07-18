@@ -1,20 +1,38 @@
 package com.rizkyfadillah.popularmoviesstage1.ui.detail;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.rizkyfadillah.popularmoviesstage1.PopularMoviesStage1App;
 import com.rizkyfadillah.popularmoviesstage1.R;
+import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
+import com.rizkyfadillah.popularmoviesstage1.vo.Video;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.observers.DisposableObserver;
 
 public class DetailMovieActivity extends AppCompatActivity {
+
+    @Inject
+    DetailViewModel detailViewModel;
 
     @BindView(R.id.backdrop) ImageView backdrop;
     @BindView(R.id.poster_image) ImageView posterImage;
@@ -24,24 +42,31 @@ public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.text_rating) TextView txtRating;
     @BindView(R.id.text_release_date) TextView txtReleaseDate;
     @BindView(R.id.text_vote_count) TextView txtVoteCount;
+    @BindView(R.id.fab_favorite) FloatingActionButton fabFavorite;
+    @BindView(R.id.recyclerview_trailer) RecyclerView recyclerViewTrailer;
+
+    List<Video> videoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_movie);
 
+        injectDependencies();
+
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
 
         if (getIntent().getExtras() != null) {
-            String posterPath = getIntent().getStringExtra("poster_path");
-            String backdropPath = getIntent().getStringExtra("backdrop_path");
-            String overview = getIntent().getStringExtra("overview");
-            String originalTitle = getIntent().getStringExtra("original_title");
-            String releaseDate = getIntent().getStringExtra("release_date");
-            double voteAverage = getIntent().getDoubleExtra("vote_average", 0);
-            double voteCount = getIntent().getIntExtra("vote_count", 0);
+            final String posterPath = getIntent().getStringExtra("poster_path");
+            final String backdropPath = getIntent().getStringExtra("backdrop_path");
+            final String overview = getIntent().getStringExtra("overview");
+            final String originalTitle = getIntent().getStringExtra("original_title");
+            final String releaseDate = getIntent().getStringExtra("release_date");
+            final double voteAverage = getIntent().getDoubleExtra("vote_average", 0);
+            final int voteCount = getIntent().getIntExtra("vote_count", 0);
+            final String id =  getIntent().getStringExtra("id");
 
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -74,8 +99,73 @@ public class DetailMovieActivity extends AppCompatActivity {
             txtRating.setText(String.valueOf(voteAverage));
             txtVoteCount.setText(String.valueOf(voteCount));
             txtReleaseDate.setText(getResources().getString(R.string.release_date, releaseDate));
+
+            fabFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Movie movie = new Movie();
+                    movie.id = id;
+                    movie.backdropPath = backdropPath;
+                    movie.originalTitle = originalTitle;
+                    movie.overview = overview;
+                    movie.posterPath = posterPath;
+                    movie.releaseDate = releaseDate;
+                    movie.voteAverage = voteAverage;
+                    movie.voteCount = voteCount;
+                    detailViewModel.addFavoriteMovie(movie)
+                            .subscribe(new DisposableObserver<Boolean>() {
+                                @Override
+                                public void onNext(@NonNull Boolean aBoolean) {
+                                    if (aBoolean)
+                                        Toast.makeText(DetailMovieActivity.this, "Add favorite movie succeed", Toast.LENGTH_SHORT).show();
+                                    else
+                                        Toast.makeText(DetailMovieActivity.this, "Add favorite movie failed", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onError(@NonNull Throwable e) {
+                                    Toast.makeText(DetailMovieActivity.this, "onError: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
+            });
+
+            final VideoMovieAdapter videoMovieAdapter = new VideoMovieAdapter(videoList);
+            recyclerViewTrailer.setLayoutManager(new LinearLayoutManager(this));
+            recyclerViewTrailer.setAdapter(videoMovieAdapter);
+
+            detailViewModel.getMovieVideos(id)
+                    .subscribe(new DisposableObserver<Video>() {
+                        @Override
+                        public void onNext(@NonNull Video video) {
+                            videoList.add(video);
+                            videoMovieAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            Toast.makeText(DetailMovieActivity.this, "onError:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
         }
 
+    }
+
+    private void injectDependencies() {
+        PopularMoviesStage1App.get()
+                .getAppComponent()
+                .plus(new DetailActivityModule())
+                .inject(this);
     }
 
     @Override

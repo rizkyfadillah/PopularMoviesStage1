@@ -3,6 +3,7 @@ package com.rizkyfadillah.popularmoviesstage1;
 import android.app.Application;
 
 import com.rizkyfadillah.popularmoviesstage1.di.AppComponent;
+import com.rizkyfadillah.popularmoviesstage1.di.AppModule;
 import com.rizkyfadillah.popularmoviesstage1.di.DaggerAppComponent;
 
 /**
@@ -29,6 +30,7 @@ public class PopularMoviesStage1App extends Application {
 
     protected AppComponent createAppComponent() {
         return appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
                 .build();
     }
 

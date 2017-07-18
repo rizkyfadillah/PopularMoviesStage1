@@ -1,6 +1,6 @@
 package com.rizkyfadillah.popularmoviesstage1.ui.main;
 
-import com.rizkyfadillah.popularmoviesstage1.api.MovieResponse;
+import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
 import com.rizkyfadillah.popularmoviesstage1.repository.MovieRepository;
 
 import io.reactivex.Observable;
@@ -18,8 +18,11 @@ public class MainViewModel {
         this.movieRepository = movieRepository;
     }
 
-    Observable<MovieResponse> getMovies(String sort) {
+    Observable<Movie> getMovies(String sort) {
         return movieRepository.getMovies(sort);
     }
 
+    Observable<Movie> getFavoriteMovies() {
+        return movieRepository.getFavoriteMovies();
+    }
 }

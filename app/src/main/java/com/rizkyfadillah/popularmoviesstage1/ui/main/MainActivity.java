@@ -6,6 +6,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,7 +16,7 @@ import android.widget.ProgressBar;
 
 import com.rizkyfadillah.popularmoviesstage1.PopularMoviesStage1App;
 import com.rizkyfadillah.popularmoviesstage1.R;
-import com.rizkyfadillah.popularmoviesstage1.api.MovieResponse;
+import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
 import com.rizkyfadillah.popularmoviesstage1.ui.detail.DetailMovieActivity;
 
 import java.util.ArrayList;
@@ -32,8 +33,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
     @Inject
     MainViewModel viewmodel;
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private List<String> movieImageList;
-    private List<MovieResponse> movieList;
+    private List<Movie> movieList;
     private MovieAdapter movieAdapter;
 
     @BindView(R.id.recylerview) RecyclerView recyclerView;
@@ -113,9 +116,44 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                     showMovies("popular");
                 }
                 return true;
+            case R.id.favorite:
+                if (item.isChecked())
+                    item.setChecked(false);
+                else {
+                    item.setChecked(true);
+                    showFavoriteMovies();
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showFavoriteMovies() {
+        progressBar.setVisibility(View.VISIBLE);
+
+        movieList.clear();
+        movieImageList.clear();
+
+        viewmodel.getFavoriteMovies()
+                .subscribe(new ResourceObserver<Movie>() {
+                    @Override
+                    public void onNext(Movie movie) {
+                        progressBar.setVisibility(View.GONE);
+                        movieImageList.add(movie.posterPath);
+                        movieList.add(movie);
+                        movieAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void showMovies(String sort) {
@@ -125,9 +163,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
         movieImageList.clear();
 
         viewmodel.getMovies(sort)
-                .subscribe(new ResourceObserver<MovieResponse>() {
+                .subscribe(new ResourceObserver<Movie>() {
                     @Override
-                    public void onNext(MovieResponse movie) {
+                    public void onNext(Movie movie) {
+                        Log.d(TAG, movie.posterPath);
                         progressBar.setVisibility(View.GONE);
                         movieImageList.add(movie.posterPath);
                         movieList.add(movie);

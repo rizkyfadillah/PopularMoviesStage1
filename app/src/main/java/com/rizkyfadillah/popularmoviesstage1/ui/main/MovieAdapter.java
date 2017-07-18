@@ -8,9 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.rizkyfadillah.popularmoviesstage1.R;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Rizky Fadillah on 15/06/2017.
@@ -48,13 +52,13 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @BindView(R.id.imageview) ImageView imageMovie;
 
-        ImageView imageMovie;
         private int mPosition;
 
         MyViewHolder(View itemView) {
             super(itemView);
-            imageMovie = (ImageView) itemView.findViewById(R.id.imageview);
+            ButterKnife.bind(this, itemView);
             imageMovie.setOnClickListener(this);
         }
 
