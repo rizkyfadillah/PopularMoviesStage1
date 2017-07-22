@@ -72,7 +72,8 @@
                     android:layout_width="132dp"
                     android:minWidth="132dp"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/poster_image" />
+                    android:contentDescription="@string/poster_image"
+                    tools:targetApi="lollipop" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -170,6 +171,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="Synopsis"
+                android:layout_marginBottom="@dimen/margin_16dp"
                 android:gravity="center"
                 android:textSize="@dimen/text_sz_16sp"
                 android:id="@+id/text_synopsis"
@@ -185,6 +187,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/recyclerview_trailer"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/margin_16dp"
+                android:background="@color/colorImagePlaceholder"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recyclerview_review"/>
 
         </LinearLayout>
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.rizkyfadillah.popularmoviesstage1.PopularMoviesStage1App;
 import com.rizkyfadillah.popularmoviesstage1.R;
 import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
+import com.rizkyfadillah.popularmoviesstage1.vo.Review;
 import com.rizkyfadillah.popularmoviesstage1.vo.Video;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -44,8 +45,10 @@ public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.text_vote_count) TextView txtVoteCount;
     @BindView(R.id.fab_favorite) FloatingActionButton fabFavorite;
     @BindView(R.id.recyclerview_trailer) RecyclerView recyclerViewTrailer;
+    @BindView(R.id.recyclerview_review) RecyclerView recyclerViewReview;
 
-    List<Video> videoList = new ArrayList<>();
+    private List<Video> videoList = new ArrayList<>();
+    private List<Review> reviewList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +69,9 @@ public class DetailMovieActivity extends AppCompatActivity {
             final String releaseDate = getIntent().getStringExtra("release_date");
             final double voteAverage = getIntent().getDoubleExtra("vote_average", 0);
             final int voteCount = getIntent().getIntExtra("vote_count", 0);
-            final String id =  getIntent().getStringExtra("id");
+            final String id = getIntent().getStringExtra("id");
 
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setTitle(originalTitle);
-            }
+            setActionBarTitle(originalTitle);
 
             Picasso.with(this)
                     .load("http://image.tmdb.org/t/p/w780" + backdropPath)
@@ -90,7 +90,7 @@ public class DetailMovieActivity extends AppCompatActivity {
 
                         @Override
                         public void onError() {
-                            supportStartPostponedEnterTransition();
+                            supportPostponeEnterTransition();
                         }
                     });
 
@@ -100,44 +100,13 @@ public class DetailMovieActivity extends AppCompatActivity {
             txtVoteCount.setText(String.valueOf(voteCount));
             txtReleaseDate.setText(getResources().getString(R.string.release_date, releaseDate));
 
-            fabFavorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Movie movie = new Movie();
-                    movie.id = id;
-                    movie.backdropPath = backdropPath;
-                    movie.originalTitle = originalTitle;
-                    movie.overview = overview;
-                    movie.posterPath = posterPath;
-                    movie.releaseDate = releaseDate;
-                    movie.voteAverage = voteAverage;
-                    movie.voteCount = voteCount;
-                    detailViewModel.addFavoriteMovie(movie)
-                            .subscribe(new DisposableObserver<Boolean>() {
-                                @Override
-                                public void onNext(@NonNull Boolean aBoolean) {
-                                    if (aBoolean)
-                                        Toast.makeText(DetailMovieActivity.this, "Add favorite movie succeed", Toast.LENGTH_SHORT).show();
-                                    else
-                                        Toast.makeText(DetailMovieActivity.this, "Add favorite movie failed", Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void onError(@NonNull Throwable e) {
-                                    Toast.makeText(DetailMovieActivity.this, "onError: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void onComplete() {
-
-                                }
-                            });
-                }
-            });
-
             final VideoMovieAdapter videoMovieAdapter = new VideoMovieAdapter(videoList);
-            recyclerViewTrailer.setLayoutManager(new LinearLayoutManager(this));
+            recyclerViewTrailer.setLayoutManager(new LinearLayoutManager(DetailMovieActivity.this));
             recyclerViewTrailer.setAdapter(videoMovieAdapter);
+
+            final ReviewMovieAdapter reviewMovieAdapter = new ReviewMovieAdapter(reviewList);
+            recyclerViewReview.setLayoutManager(new LinearLayoutManager(DetailMovieActivity.this));
+            recyclerViewReview.setAdapter(reviewMovieAdapter);
 
             detailViewModel.getMovieVideos(id)
                     .subscribe(new DisposableObserver<Video>() {
@@ -157,8 +126,89 @@ public class DetailMovieActivity extends AppCompatActivity {
 
                         }
                     });
-        }
 
+            detailViewModel.getMovieReviews(id)
+                    .subscribe(new DisposableObserver<Review>() {
+                        @Override
+                        public void onNext(@NonNull Review review) {
+                            reviewList.add(review);
+                            reviewMovieAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            Toast.makeText(DetailMovieActivity.this, "onError:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+
+            fabFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Movie movie = new Movie();
+                    movie.id = id;
+                    movie.backdropPath = backdropPath;
+                    movie.originalTitle = originalTitle;
+                    movie.overview = overview;
+                    movie.posterPath = posterPath;
+                    movie.releaseDate = releaseDate;
+                    movie.voteAverage = voteAverage;
+                    movie.voteCount = voteCount;
+
+                    saveFavoriteMovie2(movie);
+                }
+            });
+        }
+    }
+
+    private void saveFavoriteMovie(Movie movie) {
+        detailViewModel.addFavoriteMovie(movie)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        if (aBoolean)
+                            Toast.makeText(DetailMovieActivity.this, "Add favorite movie succeed", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(DetailMovieActivity.this, "Add favorite movie failed", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Toast.makeText(DetailMovieActivity.this, "onError: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private void saveFavoriteMovie2(Movie movie) {
+        detailViewModel.addFavoriteMovie2(movie)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        if (aBoolean)
+                            Toast.makeText(DetailMovieActivity.this, "Add favorite movie succeed", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(DetailMovieActivity.this, "Add favorite movie failed", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        Toast.makeText(DetailMovieActivity.this, "onError: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void injectDependencies() {
@@ -179,4 +229,10 @@ public class DetailMovieActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void setActionBarTitle(String originalTitle) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(originalTitle);
+        }
+    }
 }

@@ -1,7 +1,10 @@
 package com.rizkyfadillah.popularmoviesstage1.ui.detail;
 
+import android.net.Uri;
+
 import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
 import com.rizkyfadillah.popularmoviesstage1.repository.MovieRepository;
+import com.rizkyfadillah.popularmoviesstage1.vo.Review;
 import com.rizkyfadillah.popularmoviesstage1.vo.Video;
 
 import io.reactivex.Observable;
@@ -30,8 +33,22 @@ public class DetailViewModel {
                 });
     }
 
+    Observable<Boolean> addFavoriteMovie2(Movie movie) {
+        return movieRepository.addFavoriteMovie2(movie)
+                .map(new Function<Uri, Boolean>() {
+                    @Override
+                    public Boolean apply(@NonNull Uri uri) throws Exception {
+                        return uri != null;
+                    }
+                });
+    }
+
     Observable<Video> getMovieVideos(String id) {
         return movieRepository.getMovieVideos(id);
+    }
+
+    Observable<Review> getMovieReviews(String id) {
+        return movieRepository.getMovieReviews(id);
     }
 
 }

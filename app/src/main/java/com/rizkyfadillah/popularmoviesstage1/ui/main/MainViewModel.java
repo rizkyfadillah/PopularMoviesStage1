@@ -25,4 +25,9 @@ public class MainViewModel {
     Observable<Movie> getFavoriteMovies() {
         return movieRepository.getFavoriteMovies();
     }
+
+    Observable<Movie> getFavoriteMovies2() {
+        return movieRepository.getFavoriteMovies2();
+    }
+
 }
