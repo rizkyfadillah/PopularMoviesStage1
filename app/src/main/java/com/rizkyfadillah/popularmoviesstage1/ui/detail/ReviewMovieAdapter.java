@@ -40,7 +40,7 @@ public class ReviewMovieAdapter extends RecyclerView.Adapter<ReviewMovieAdapter.
 
     @Override
     public int getItemCount() {
-        return 0;
+        return reviewList.size();
     }
 
     class ReviewViewHoler extends RecyclerView.ViewHolder {

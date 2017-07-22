@@ -8,6 +8,8 @@ import com.rizkyfadillah.popularmoviesstage1.vo.Review;
 import com.rizkyfadillah.popularmoviesstage1.vo.Video;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
@@ -51,4 +53,17 @@ public class DetailViewModel {
         return movieRepository.getMovieReviews(id);
     }
 
+    boolean isMovieFavorite(String id) {
+        return movieRepository.findMovieById(id) != null;
+    }
+
+    Observable<Boolean> deleteFavoriteMovie(final String id) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
+                e.onNext(movieRepository.deleteMovieById(id) != 0);
+                e.onComplete();
+            }
+        });
+    }
 }

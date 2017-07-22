@@ -6,6 +6,8 @@ import com.rizkyfadillah.popularmoviesstage1.di.AppComponent;
 import com.rizkyfadillah.popularmoviesstage1.di.AppModule;
 import com.rizkyfadillah.popularmoviesstage1.di.DaggerAppComponent;
 
+import timber.log.Timber;
+
 /**
  * Created by Rizky Fadillah on 15/06/2017.
  * Android Developer
@@ -20,6 +22,8 @@ public class PopularMoviesStage1App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Timber.plant(new Timber.DebugTree());
 
         instance = this;
     }

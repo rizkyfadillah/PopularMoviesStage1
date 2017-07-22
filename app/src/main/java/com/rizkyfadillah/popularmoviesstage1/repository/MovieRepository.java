@@ -168,9 +168,48 @@ public class MovieRepository {
                     movie.releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
                     e.onNext(movie);
                 }
-                e.onComplete();
                 cursor.close();
+                e.onComplete();
             }
         });
+    }
+
+    public Movie findMovieById(String id) {
+        String [] whereArgs = {id};
+
+        Cursor cursor = context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                MovieContract.MovieEntry._ID + " = ?",
+                whereArgs,
+                null);
+
+        while (cursor.moveToNext()) {
+            Movie movie = new Movie();
+            movie.id = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry._ID));
+            movie.backdropPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP));
+            movie.posterPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER));
+            movie.overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW));
+            movie.originalTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE));
+            movie.voteCount = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT));
+            movie.voteAverage = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE));
+            movie.releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
+            return movie;
+        }
+
+        cursor.close();
+
+        return null;
+    }
+
+    public int deleteMovieById(String id) {
+        String [] whereArgs = {id};
+
+        Uri uriToDelete = MovieContract.MovieEntry.CONTENT_URI.buildUpon().appendPath(id).build();
+
+        int deletedMovie = context.getContentResolver().delete(uriToDelete,
+                null,
+                null);
+
+        return deletedMovie;
     }
 }

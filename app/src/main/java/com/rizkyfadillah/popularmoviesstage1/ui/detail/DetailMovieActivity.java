@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rizkyfadillah.popularmoviesstage1.CustomLinearLayoutManager;
 import com.rizkyfadillah.popularmoviesstage1.PopularMoviesStage1App;
 import com.rizkyfadillah.popularmoviesstage1.R;
 import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
@@ -29,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
+import timber.log.Timber;
 
 public class DetailMovieActivity extends AppCompatActivity {
 
@@ -46,6 +48,7 @@ public class DetailMovieActivity extends AppCompatActivity {
     @BindView(R.id.fab_favorite) FloatingActionButton fabFavorite;
     @BindView(R.id.recyclerview_trailer) RecyclerView recyclerViewTrailer;
     @BindView(R.id.recyclerview_review) RecyclerView recyclerViewReview;
+    @BindView(R.id.text_label_no_review) TextView txtLabelNoReview;
 
     private List<Video> videoList = new ArrayList<>();
     private List<Review> reviewList = new ArrayList<>();
@@ -72,6 +75,10 @@ public class DetailMovieActivity extends AppCompatActivity {
             final String id = getIntent().getStringExtra("id");
 
             setActionBarTitle(originalTitle);
+
+            if (detailViewModel.isMovieFavorite(id)) {
+                fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.octagon));
+            }
 
             Picasso.with(this)
                     .load("http://image.tmdb.org/t/p/w780" + backdropPath)
@@ -105,7 +112,7 @@ public class DetailMovieActivity extends AppCompatActivity {
             recyclerViewTrailer.setAdapter(videoMovieAdapter);
 
             final ReviewMovieAdapter reviewMovieAdapter = new ReviewMovieAdapter(reviewList);
-            recyclerViewReview.setLayoutManager(new LinearLayoutManager(DetailMovieActivity.this));
+            recyclerViewReview.setLayoutManager(new CustomLinearLayoutManager(DetailMovieActivity.this));
             recyclerViewReview.setAdapter(reviewMovieAdapter);
 
             detailViewModel.getMovieVideos(id)
@@ -123,7 +130,6 @@ public class DetailMovieActivity extends AppCompatActivity {
 
                         @Override
                         public void onComplete() {
-
                         }
                     });
 
@@ -142,7 +148,11 @@ public class DetailMovieActivity extends AppCompatActivity {
 
                         @Override
                         public void onComplete() {
-
+                            Timber.d("onComplete review");
+                            if (reviewList.isEmpty()) {
+                                recyclerViewReview.setVisibility(View.GONE);
+                                txtLabelNoReview.setVisibility(View.VISIBLE);
+                            }
                         }
                     });
 
@@ -159,10 +169,38 @@ public class DetailMovieActivity extends AppCompatActivity {
                     movie.voteAverage = voteAverage;
                     movie.voteCount = voteCount;
 
-                    saveFavoriteMovie2(movie);
+                    if (detailViewModel.isMovieFavorite(id)) {
+                        deleteFavoriteMovie(id);
+                    } else {
+                        saveFavoriteMovie2(movie);
+                    }
                 }
             });
         }
+    }
+
+    private void deleteFavoriteMovie(String id) {
+        detailViewModel.deleteFavoriteMovie(id)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        if (aBoolean) {
+                            fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_border_black_48dp));
+                        } else {
+                            Toast.makeText(DetailMovieActivity.this, "Delete favorite movie failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void saveFavoriteMovie(Movie movie) {
@@ -193,10 +231,12 @@ public class DetailMovieActivity extends AppCompatActivity {
                 .subscribe(new DisposableObserver<Boolean>() {
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
-                        if (aBoolean)
+                        if (aBoolean) {
                             Toast.makeText(DetailMovieActivity.this, "Add favorite movie succeed", Toast.LENGTH_SHORT).show();
-                        else
+                            fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.octagon));
+                        } else {
                             Toast.makeText(DetailMovieActivity.this, "Add favorite movie failed", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

@@ -42,6 +42,8 @@ dependencies {
 
     compile 'com.facebook.stetho:stetho:1.5.0'
 
+    compile 'com.jakewharton.timber:timber:4.5.1'
+
     //Okhttp
     compile "com.squareup.okhttp3:okhttp:$okhttp_version"
     compile "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
