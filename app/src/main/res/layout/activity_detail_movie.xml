@@ -222,8 +222,9 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/text_label_no_review"
                     android:visibility="gone"
+                    android:paddingBottom="@dimen/margin_16dp"
                     android:layout_gravity="center"
-                    android:text="No Review"/>
+                    android:text="@string/no_review"/>
 
             </FrameLayout>
 
@@ -236,7 +237,7 @@
         android:layout_width="wrap_content"
         android:id="@+id/fab_favorite"
         android:layout_margin="@dimen/margin_16dp"
-        android:src="@drawable/ic_star_border_black_48dp"
+        android:src="@drawable/ic_add_white_48dp"
         app:layout_anchor="@id/main.appbar"
         app:layout_anchorGravity="bottom|right|end" />
 

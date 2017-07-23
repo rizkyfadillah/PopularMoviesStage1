@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.rizkyfadillah.popularmoviesstage1.R;
-import com.rizkyfadillah.popularmoviesstage1.vo.Content;
 import com.rizkyfadillah.popularmoviesstage1.vo.Review;
 
 import java.util.List;
@@ -19,11 +18,11 @@ import butterknife.ButterKnife;
  * @author Rizky Fadillah on 22/07/2017.
  */
 
-public class ReviewMovieAdapter extends RecyclerView.Adapter<ReviewMovieAdapter.ReviewViewHoler> {
+class ReviewMovieAdapter extends RecyclerView.Adapter<ReviewMovieAdapter.ReviewViewHoler> {
 
-    private List<Review> reviewList;
+    private final List<Review> reviewList;
 
-    public ReviewMovieAdapter(List<Review> reviewList) {
+    ReviewMovieAdapter(List<Review> reviewList) {
         this.reviewList = reviewList;
     }
 

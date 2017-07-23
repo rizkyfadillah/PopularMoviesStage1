@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.rizkyfadillah.popularmoviesstage1.MovieDBService;
-import com.rizkyfadillah.popularmoviesstage1.db.MovieDbHelper;
 import com.rizkyfadillah.popularmoviesstage1.repository.MovieRepository;
 
 import javax.inject.Singleton;
@@ -16,7 +15,7 @@ import dagger.Provides;
  * @author Rizky Fadillah on 17/07/2017.
  */
 @Module(includes = {MovieDBApiModule.class, DbModule.class})
-public class DataModule {
+class DataModule {
 
     @Provides
     @Singleton

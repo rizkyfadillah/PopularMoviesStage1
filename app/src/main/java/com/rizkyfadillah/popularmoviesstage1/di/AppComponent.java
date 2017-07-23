@@ -1,7 +1,5 @@
 package com.rizkyfadillah.popularmoviesstage1.di;
 
-import android.provider.ContactsContract;
-
 import com.rizkyfadillah.popularmoviesstage1.ui.detail.DetailActivityComponent;
 import com.rizkyfadillah.popularmoviesstage1.ui.detail.DetailActivityModule;
 import com.rizkyfadillah.popularmoviesstage1.ui.main.MainActivityComponent;

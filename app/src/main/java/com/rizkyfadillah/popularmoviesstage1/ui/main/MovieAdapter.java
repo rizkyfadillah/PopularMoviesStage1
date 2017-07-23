@@ -23,11 +23,11 @@ import butterknife.ButterKnife;
 
 class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
 
-    private List<String> urlImageList;
+    private final List<String> urlImageList;
 
     private Context mContext;
 
-    private OnClickMovieListener mCallback;
+    private final OnClickMovieListener mCallback;
 
     MovieAdapter(OnClickMovieListener callback, List<String> urlImageList) {
         this.urlImageList = urlImageList;

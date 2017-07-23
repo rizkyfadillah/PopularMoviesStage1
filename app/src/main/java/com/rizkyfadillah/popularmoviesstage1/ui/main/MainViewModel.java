@@ -12,7 +12,7 @@ import io.reactivex.Observable;
 
 public class MainViewModel {
 
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     MainViewModel(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
@@ -24,10 +24,6 @@ public class MainViewModel {
 
     Observable<Movie> getFavoriteMovies() {
         return movieRepository.getFavoriteMovies();
-    }
-
-    Observable<Movie> getFavoriteMovies2() {
-        return movieRepository.getFavoriteMovies2();
     }
 
 }

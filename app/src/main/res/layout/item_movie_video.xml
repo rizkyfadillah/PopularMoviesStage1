@@ -10,6 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/imageview_video_thumbnail"
+        android:contentDescription="@string/video_thumbnail"
         android:adjustViewBounds="true"
         android:layout_marginRight="@dimen/margin_16dp"
         android:layout_marginEnd="@dimen/margin_16dp"

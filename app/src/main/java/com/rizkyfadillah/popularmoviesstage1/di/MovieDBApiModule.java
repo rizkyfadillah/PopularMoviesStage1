@@ -1,26 +1,15 @@
 package com.rizkyfadillah.popularmoviesstage1.di;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-
 import com.rizkyfadillah.popularmoviesstage1.MovieDBService;
 import com.rizkyfadillah.popularmoviesstage1.ServiceInterceptor;
-import com.rizkyfadillah.popularmoviesstage1.Utils;
-import com.rizkyfadillah.popularmoviesstage1.repository.MovieRepository;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.Cache;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -31,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Android Developer
  */
 @Module
-public class MovieDBApiModule {
+class MovieDBApiModule {
 
     @Provides
     @Singleton

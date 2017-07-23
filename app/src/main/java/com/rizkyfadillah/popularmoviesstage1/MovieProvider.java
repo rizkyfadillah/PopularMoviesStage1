@@ -22,8 +22,8 @@ import static com.rizkyfadillah.popularmoviesstage1.db.MovieContract.MovieEntry.
 
 public class MovieProvider extends ContentProvider {
 
-    public static final int MOVIE = 100;
-    public static final int MOVIE_WITH_ID = 101;
+    private static final int MOVIE = 100;
+    private static final int MOVIE_WITH_ID = 101;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -69,7 +69,9 @@ public class MovieProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if (getContext() != null) {
+            retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
 
         return retCursor;
     }
@@ -101,7 +103,9 @@ public class MovieProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
 
         return returnUri;
     }
@@ -123,7 +127,9 @@ public class MovieProvider extends ContentProvider {
         }
 
         if (movieDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            if (getContext() != null) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
         }
 
         return movieDeleted;

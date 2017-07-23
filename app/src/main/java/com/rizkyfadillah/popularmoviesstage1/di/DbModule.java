@@ -14,17 +14,17 @@ import dagger.Provides;
  * @author Rizky Fadillah on 18/07/2017.
  */
 @Module
-public class DbModule {
+class DbModule {
 
     @Provides
     @Singleton
-    public MovieDbHelper provideMovieDbHelper(Context context) {
+    MovieDbHelper provideMovieDbHelper(Context context) {
         return new MovieDbHelper(context);
     }
 
     @Provides
     @Singleton
-    public SQLiteDatabase provideSQLiteDatabase(MovieDbHelper movieDbHelper) {
+    SQLiteDatabase provideSQLiteDatabase(MovieDbHelper movieDbHelper) {
         return movieDbHelper.getWritableDatabase();
     }
 

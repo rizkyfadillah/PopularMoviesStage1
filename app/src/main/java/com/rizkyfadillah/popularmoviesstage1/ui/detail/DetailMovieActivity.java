@@ -77,7 +77,7 @@ public class DetailMovieActivity extends AppCompatActivity {
             setActionBarTitle(originalTitle);
 
             if (detailViewModel.isMovieFavorite(id)) {
-                fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.octagon));
+                fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_remove_white_48dp));
             }
 
             Picasso.with(this)
@@ -108,7 +108,7 @@ public class DetailMovieActivity extends AppCompatActivity {
             txtReleaseDate.setText(getResources().getString(R.string.release_date, releaseDate));
 
             final VideoMovieAdapter videoMovieAdapter = new VideoMovieAdapter(videoList);
-            recyclerViewTrailer.setLayoutManager(new LinearLayoutManager(DetailMovieActivity.this));
+            recyclerViewTrailer.setLayoutManager(new CustomLinearLayoutManager(DetailMovieActivity.this));
             recyclerViewTrailer.setAdapter(videoMovieAdapter);
 
             final ReviewMovieAdapter reviewMovieAdapter = new ReviewMovieAdapter(reviewList);
@@ -185,7 +185,8 @@ public class DetailMovieActivity extends AppCompatActivity {
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
                         if (aBoolean) {
-                            fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_border_black_48dp));
+                            Toast.makeText(DetailMovieActivity.this, "Delete favorite movie succeed", Toast.LENGTH_SHORT).show();
+                            fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_white_48dp));
                         } else {
                             Toast.makeText(DetailMovieActivity.this, "Delete favorite movie failed", Toast.LENGTH_SHORT).show();
                         }
@@ -203,29 +204,6 @@ public class DetailMovieActivity extends AppCompatActivity {
                 });
     }
 
-    private void saveFavoriteMovie(Movie movie) {
-        detailViewModel.addFavoriteMovie(movie)
-                .subscribe(new DisposableObserver<Boolean>() {
-                    @Override
-                    public void onNext(@NonNull Boolean aBoolean) {
-                        if (aBoolean)
-                            Toast.makeText(DetailMovieActivity.this, "Add favorite movie succeed", Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(DetailMovieActivity.this, "Add favorite movie failed", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        Toast.makeText(DetailMovieActivity.this, "onError: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
     private void saveFavoriteMovie2(Movie movie) {
         detailViewModel.addFavoriteMovie2(movie)
                 .subscribe(new DisposableObserver<Boolean>() {
@@ -233,7 +211,7 @@ public class DetailMovieActivity extends AppCompatActivity {
                     public void onNext(@NonNull Boolean aBoolean) {
                         if (aBoolean) {
                             Toast.makeText(DetailMovieActivity.this, "Add favorite movie succeed", Toast.LENGTH_SHORT).show();
-                            fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.octagon));
+                            fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_remove_white_48dp));
                         } else {
                             Toast.makeText(DetailMovieActivity.this, "Add favorite movie failed", Toast.LENGTH_SHORT).show();
                         }

@@ -6,11 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import com.rizkyfadillah.popularmoviesstage1.BuildConfig;
 import com.rizkyfadillah.popularmoviesstage1.MovieDBService;
 import com.rizkyfadillah.popularmoviesstage1.api.BaseApiResponse;
-import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
 import com.rizkyfadillah.popularmoviesstage1.db.MovieContract;
+import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
 import com.rizkyfadillah.popularmoviesstage1.vo.Review;
 import com.rizkyfadillah.popularmoviesstage1.vo.Video;
 
@@ -31,9 +30,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MovieRepository {
 
-    private MovieDBService service;
-    private SQLiteDatabase database;
-    private Context context;
+    private final MovieDBService service;
+    private final SQLiteDatabase database;
+    private final Context context;
 
     public MovieRepository(MovieDBService service, SQLiteDatabase database, Context context) {
         this.service = service;
@@ -116,37 +115,6 @@ public class MovieRepository {
     }
 
     public Observable<Movie> getFavoriteMovies() {
-        final Cursor cursor = database.query(
-                MovieContract.MovieEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        return Observable.create(new ObservableOnSubscribe<Movie>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<Movie> e) throws Exception {
-                while (cursor.moveToNext()) {
-                    Movie movie = new Movie();
-                    movie.backdropPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP));
-                    movie.posterPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER));
-                    movie.overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW));
-                    movie.originalTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE));
-                    movie.voteCount = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT));
-                    movie.voteAverage = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE));
-                    movie.releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
-                    e.onNext(movie);
-                }
-                e.onComplete();
-                cursor.close();
-            }
-        });
-    }
-
-    public Observable<Movie> getFavoriteMovies2() {
         final Cursor cursor = context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
                 null,
                 null,
@@ -156,20 +124,22 @@ public class MovieRepository {
         return Observable.create(new ObservableOnSubscribe<Movie>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Movie> e) throws Exception {
-                while (cursor.moveToNext()) {
-                    Movie movie = new Movie();
-                    movie.id = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry._ID));
-                    movie.backdropPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP));
-                    movie.posterPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER));
-                    movie.overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW));
-                    movie.originalTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE));
-                    movie.voteCount = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT));
-                    movie.voteAverage = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE));
-                    movie.releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
-                    e.onNext(movie);
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        Movie movie = new Movie();
+                        movie.id = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry._ID));
+                        movie.backdropPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP));
+                        movie.posterPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER));
+                        movie.overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW));
+                        movie.originalTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE));
+                        movie.voteCount = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT));
+                        movie.voteAverage = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE));
+                        movie.releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
+                        e.onNext(movie);
+                    }
+                    cursor.close();
+                    e.onComplete();
                 }
-                cursor.close();
-                e.onComplete();
             }
         });
     }
@@ -183,33 +153,30 @@ public class MovieRepository {
                 whereArgs,
                 null);
 
-        while (cursor.moveToNext()) {
-            Movie movie = new Movie();
-            movie.id = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry._ID));
-            movie.backdropPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP));
-            movie.posterPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER));
-            movie.overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW));
-            movie.originalTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE));
-            movie.voteCount = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT));
-            movie.voteAverage = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE));
-            movie.releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
-            return movie;
+        if (cursor != null) {
+            if (cursor.moveToNext()) {
+                Movie movie = new Movie();
+                movie.id = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry._ID));
+                movie.backdropPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP));
+                movie.posterPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER));
+                movie.overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW));
+                movie.originalTitle = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE));
+                movie.voteCount = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT));
+                movie.voteAverage = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE));
+                movie.releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
+                return movie;
+            }
+            cursor.close();
         }
-
-        cursor.close();
 
         return null;
     }
 
     public int deleteMovieById(String id) {
-        String [] whereArgs = {id};
-
         Uri uriToDelete = MovieContract.MovieEntry.CONTENT_URI.buildUpon().appendPath(id).build();
 
-        int deletedMovie = context.getContentResolver().delete(uriToDelete,
+        return context.getContentResolver().delete(uriToDelete,
                 null,
                 null);
-
-        return deletedMovie;
     }
 }

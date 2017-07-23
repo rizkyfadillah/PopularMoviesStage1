@@ -30,7 +30,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.ResourceObserver;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnClickMovieListener {
 
@@ -121,27 +120,27 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
         progressBar.setVisibility(View.VISIBLE);
         switch (item.getItemId()) {
             case R.id.top_rated:
-                if (item.isChecked())
+                if (item.isChecked()) {
                     item.setChecked(false);
-                else {
+                } else {
                     item.setChecked(true);
                     showMovies("top_rated");
                 }
                 return true;
             case R.id.popular:
-                if (item.isChecked())
+                if (item.isChecked()) {
                     item.setChecked(false);
-                else {
+                } else {
                     item.setChecked(true);
                     showMovies("popular");
                 }
                 return true;
             case R.id.favorite:
-                if (item.isChecked())
+                if (item.isChecked()) {
                     item.setChecked(false);
-                else {
+                } else {
                     item.setChecked(true);
-                    showFavoriteMovies2();
+                    showFavoriteMovies();
                 }
             default:
                 return super.onOptionsItemSelected(item);
@@ -149,8 +148,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
     }
 
     private void showFavoriteMovies() {
-        progressBar.setVisibility(View.VISIBLE);
-
         movieList.clear();
         movieImageList.clear();
 
@@ -160,61 +157,30 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                 .subscribe(new DisposableObserver<Movie>() {
                     @Override
                     public void onNext(Movie movie) {
-                        progressBar.setVisibility(View.GONE);
+//                        progressBar.setVisibility(View.GONE);
                         movieImageList.add(movie.posterPath);
                         movieList.add(movie);
-                        movieAdapter.notifyDataSetChanged();
+//                        movieAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
                         layoutError.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                         txtErrorMessage.setText(e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
                         progressBar.setVisibility(View.GONE);
-                    }
-                });
-    }
-
-    private void showFavoriteMovies2() {
-//        progressBar.setVisibility(View.VISIBLE);
-
-        movieList.clear();
-        movieImageList.clear();
-
-        movieAdapter.notifyDataSetChanged();
-
-        viewmodel.getFavoriteMovies2()
-                .subscribe(new DisposableObserver<Movie>() {
-                    @Override
-                    public void onNext(Movie movie) {
-                        progressBar.setVisibility(View.GONE);
-                        movieImageList.add(movie.posterPath);
-                        movieList.add(movie);
                         movieAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        progressBar.setVisibility(View.GONE);
-                        layoutError.setVisibility(View.VISIBLE);
-                        txtErrorMessage.setText(e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 });
     }
 
     private void showMovies(String sort) {
-//        progressBar.setVisibility(View.VISIBLE);
-
         movieList.clear();
         movieImageList.clear();
 
@@ -224,23 +190,25 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                 .subscribe(new DisposableObserver<Movie>() {
                     @Override
                     public void onNext(Movie movie) {
-                        Log.d(TAG, movie.posterPath);
-                        progressBar.setVisibility(View.GONE);
+//                        progressBar.setVisibility(View.GONE);
                         movieImageList.add(movie.posterPath);
                         movieList.add(movie);
-                        movieAdapter.notifyDataSetChanged();
+//                        movieAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
                         layoutError.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                         txtErrorMessage.setText(e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
                         progressBar.setVisibility(View.GONE);
+                        movieAdapter.notifyDataSetChanged();
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 });
     }

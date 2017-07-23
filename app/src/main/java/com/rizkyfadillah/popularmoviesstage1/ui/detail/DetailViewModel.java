@@ -19,7 +19,7 @@ import io.reactivex.functions.Function;
 
 public class DetailViewModel {
 
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     public DetailViewModel(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
