@@ -6,17 +6,21 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.rizkyfadillah.popularmoviesstage1.PopularMoviesStage1App;
 import com.rizkyfadillah.popularmoviesstage1.R;
-import com.rizkyfadillah.popularmoviesstage1.api.MovieResponse;
 import com.rizkyfadillah.popularmoviesstage1.ui.detail.DetailMovieActivity;
+import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,19 +29,24 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.observers.ResourceObserver;
+import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnClickMovieListener {
 
     @Inject
     MainViewModel viewmodel;
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private List<String> movieImageList;
-    private List<MovieResponse> movieList;
+    private List<Movie> movieList;
     private MovieAdapter movieAdapter;
 
     @BindView(R.id.recylerview) RecyclerView recyclerView;
     @BindView(R.id.progressbar) ProgressBar progressBar;
+    @BindView(R.id.layout_error) LinearLayout layoutError;
+    @BindView(R.id.button_retry) Button btnRetry;
+    @BindView(R.id.text_error_message) TextView txtErrorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,17 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        layoutError.setVisibility(View.GONE);
+
+        btnRetry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutError.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+                showMovies("popular");
+            }
+        });
 
         movieList = new ArrayList<>();
         movieImageList = new ArrayList<>();
@@ -96,52 +116,99 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+        layoutError.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
         switch (item.getItemId()) {
             case R.id.top_rated:
-                if (item.isChecked())
+                if (item.isChecked()) {
                     item.setChecked(false);
-                else {
+                } else {
                     item.setChecked(true);
                     showMovies("top_rated");
                 }
                 return true;
             case R.id.popular:
-                if (item.isChecked())
+                if (item.isChecked()) {
                     item.setChecked(false);
-                else {
+                } else {
                     item.setChecked(true);
                     showMovies("popular");
                 }
                 return true;
+            case R.id.favorite:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                    showFavoriteMovies();
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void showMovies(String sort) {
-        progressBar.setVisibility(View.VISIBLE);
-
+    private void showFavoriteMovies() {
         movieList.clear();
         movieImageList.clear();
 
-        viewmodel.getMovies(sort)
-                .subscribe(new ResourceObserver<MovieResponse>() {
+        movieAdapter.notifyDataSetChanged();
+
+        viewmodel.getFavoriteMovies()
+                .subscribe(new DisposableObserver<Movie>() {
                     @Override
-                    public void onNext(MovieResponse movie) {
-                        progressBar.setVisibility(View.GONE);
+                    public void onNext(Movie movie) {
+//                        progressBar.setVisibility(View.GONE);
                         movieImageList.add(movie.posterPath);
                         movieList.add(movie);
-                        movieAdapter.notifyDataSetChanged();
+//                        movieAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        progressBar.setVisibility(View.GONE);
+                        layoutError.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                        txtErrorMessage.setText(e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
                         progressBar.setVisibility(View.GONE);
+                        movieAdapter.notifyDataSetChanged();
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+    private void showMovies(String sort) {
+        movieList.clear();
+        movieImageList.clear();
+
+        movieAdapter.notifyDataSetChanged();
+
+        viewmodel.getMovies(sort)
+                .subscribe(new DisposableObserver<Movie>() {
+                    @Override
+                    public void onNext(Movie movie) {
+//                        progressBar.setVisibility(View.GONE);
+                        movieImageList.add(movie.posterPath);
+                        movieList.add(movie);
+//                        movieAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressBar.setVisibility(View.GONE);
+                        layoutError.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                        txtErrorMessage.setText(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressBar.setVisibility(View.GONE);
+                        movieAdapter.notifyDataSetChanged();
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 });
     }

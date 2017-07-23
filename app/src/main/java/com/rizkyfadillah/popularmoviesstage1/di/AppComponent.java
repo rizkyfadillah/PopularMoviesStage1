@@ -1,5 +1,7 @@
 package com.rizkyfadillah.popularmoviesstage1.di;
 
+import com.rizkyfadillah.popularmoviesstage1.ui.detail.DetailActivityComponent;
+import com.rizkyfadillah.popularmoviesstage1.ui.detail.DetailActivityModule;
 import com.rizkyfadillah.popularmoviesstage1.ui.main.MainActivityComponent;
 import com.rizkyfadillah.popularmoviesstage1.ui.main.MainActivityModule;
 
@@ -15,10 +17,13 @@ import dagger.Component;
 @Component(
         modules = {
                 AppModule.class,
-                MovieDBApiModule.class
+                MovieDBApiModule.class,
+                DataModule.class
         })
 public interface AppComponent {
 
     MainActivityComponent plus(MainActivityModule mainActivityModule);
+
+    DetailActivityComponent plus(DetailActivityModule detailActivityModule);
 
 }

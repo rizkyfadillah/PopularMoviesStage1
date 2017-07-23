@@ -1,7 +1,7 @@
 package com.rizkyfadillah.popularmoviesstage1.di;
 
 import com.rizkyfadillah.popularmoviesstage1.MovieDBService;
-import com.rizkyfadillah.popularmoviesstage1.repository.MovieRepository;
+import com.rizkyfadillah.popularmoviesstage1.ServiceInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Android Developer
  */
 @Module
-public class MovieDBApiModule {
+class MovieDBApiModule {
 
     @Provides
     @Singleton
@@ -30,6 +30,7 @@ public class MovieDBApiModule {
 
         return new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
+                .addInterceptor(new ServiceInterceptor())
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .build();
@@ -50,12 +51,6 @@ public class MovieDBApiModule {
     @Singleton
     MovieDBService provideMovieDBService(Retrofit restAdapter) {
         return restAdapter.create(MovieDBService.class);
-    }
-
-    @Provides
-    @Singleton
-    MovieRepository provideMovieRepository(MovieDBService movieDBService) {
-        return new MovieRepository(movieDBService);
     }
 
 }

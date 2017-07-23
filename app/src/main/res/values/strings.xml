@@ -7,4 +7,10 @@
     <string name="backdrop_image">Backdrop Image</string>
     <string name="popular">Popular</string>
     <string name="top_rated">Top Rated</string>
+    <string name="favorite">Favorite</string>
+    <string name="retry">Retry</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="video_thumbnail">Video Thumbnail</string>
+    <string name="no_review">No Review</string>
 </resources>

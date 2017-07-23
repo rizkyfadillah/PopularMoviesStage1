@@ -3,7 +3,10 @@ package com.rizkyfadillah.popularmoviesstage1;
 import android.app.Application;
 
 import com.rizkyfadillah.popularmoviesstage1.di.AppComponent;
+import com.rizkyfadillah.popularmoviesstage1.di.AppModule;
 import com.rizkyfadillah.popularmoviesstage1.di.DaggerAppComponent;
+
+import timber.log.Timber;
 
 /**
  * Created by Rizky Fadillah on 15/06/2017.
@@ -20,6 +23,8 @@ public class PopularMoviesStage1App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Timber.plant(new Timber.DebugTree());
+
         instance = this;
     }
 
@@ -29,6 +34,7 @@ public class PopularMoviesStage1App extends Application {
 
     protected AppComponent createAppComponent() {
         return appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
                 .build();
     }
 
