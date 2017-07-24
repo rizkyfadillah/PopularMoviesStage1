@@ -22,8 +22,4 @@ public class MainViewModel {
         return movieRepository.getMovies(sort);
     }
 
-    Observable<Movie> getFavoriteMovies() {
-        return movieRepository.getFavoriteMovies();
-    }
-
 }

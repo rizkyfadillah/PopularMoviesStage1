@@ -41,15 +41,19 @@ public class MovieRepository {
     }
 
     public Observable<Movie> getMovies(String sort) {
-        return service.getMovies(sort)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMapIterable(new Function<BaseApiResponse<List<Movie>>, Iterable<? extends Movie>>() {
-                    @Override
-                    public Iterable<? extends Movie> apply(BaseApiResponse<List<Movie>> response) throws Exception {
-                        return response.results;
-                    }
-                });
+        if (sort.equals("favorite")) {
+            return getFavoriteMovies();
+        } else {
+            return service.getMovies(sort)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .flatMapIterable(new Function<BaseApiResponse<List<Movie>>, Iterable<? extends Movie>>() {
+                        @Override
+                        public Iterable<? extends Movie> apply(BaseApiResponse<List<Movie>> response) throws Exception {
+                            return response.results;
+                        }
+                    });
+        }
     }
 
     public Observable<Video> getMovieVideos(String id) {

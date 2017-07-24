@@ -21,8 +21,8 @@
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp">
+            app:expandedTitleMarginStart="@dimen/margin_48dp"
+            app:expandedTitleMarginEnd="@dimen/margin_64dp">
 
             <ImageView
                 android:id="@+id/backdrop"
@@ -69,8 +69,8 @@
                     android:id="@+id/poster_image"
                     android:adjustViewBounds="true"
                     android:transitionName="movieImage"
-                    android:layout_width="132dp"
-                    android:minWidth="132dp"
+                    android:layout_width="@dimen/margin_132dp"
+                    android:minWidth="@dimen/margin_132dp"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/poster_image"
                     tools:targetApi="lollipop" />
