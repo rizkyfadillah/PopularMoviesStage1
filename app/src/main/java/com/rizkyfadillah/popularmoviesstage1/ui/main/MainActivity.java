@@ -6,7 +6,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,17 +29,22 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.observers.DisposableObserver;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnClickMovieListener {
 
     @Inject
     MainViewModel viewmodel;
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     private List<String> movieImageList;
     private List<Movie> movieList;
     private MovieAdapter movieAdapter;
+
+    private int sort = -1;
+    private int scrollPosition = -1;
+
+    private final String STATE_SORT = "state_sort";
+    private static final String STATE_SCROLL_POSITION = "state_scroll_position";
 
     @BindView(R.id.recylerview) RecyclerView recyclerView;
     @BindView(R.id.progressbar) ProgressBar progressBar;
@@ -76,7 +80,24 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
 
         setupActivityComponent();
 
-        showMovies("popular");
+        if (savedInstanceState != null) {
+            scrollPosition = savedInstanceState.getInt(STATE_SCROLL_POSITION);
+            sort = savedInstanceState.getInt(STATE_SORT);
+            switch (sort) {
+                case R.id.top_rated:
+                    showMovies("top_rated");
+                    break;
+                case R.id.popular:
+                    showMovies("popular");
+                    break;
+                case R.id.favorite:
+                    showMovies("favorite");
+                    break;
+            }
+        } else {
+            showMovies("popular");
+            sort = R.id.popular;
+        }
     }
 
     private void setupActivityComponent() {
@@ -109,13 +130,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
-        menu.findItem(R.id.popular).setChecked(true);
+        if (sort == -1) {
+            menu.findItem(R.id.popular).setChecked(true);
+            return true;
+        }
+
+        menu.findItem(sort).setChecked(true);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         layoutError.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         switch (item.getItemId()) {
@@ -123,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                 if (item.isChecked()) {
                     item.setChecked(false);
                 } else {
+                    sort = item.getItemId();
                     item.setChecked(true);
                     showMovies("top_rated");
                 }
@@ -131,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                 if (item.isChecked()) {
                     item.setChecked(false);
                 } else {
+                    sort = item.getItemId();
                     item.setChecked(true);
                     showMovies("popular");
                 }
@@ -139,45 +167,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                 if (item.isChecked()) {
                     item.setChecked(false);
                 } else {
+                    sort = item.getItemId();
                     item.setChecked(true);
-                    showFavoriteMovies();
+                    showMovies("favorite");
                 }
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void showFavoriteMovies() {
-        movieList.clear();
-        movieImageList.clear();
-
-        movieAdapter.notifyDataSetChanged();
-
-        viewmodel.getFavoriteMovies()
-                .subscribe(new DisposableObserver<Movie>() {
-                    @Override
-                    public void onNext(Movie movie) {
-//                        progressBar.setVisibility(View.GONE);
-                        movieImageList.add(movie.posterPath);
-                        movieList.add(movie);
-//                        movieAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        progressBar.setVisibility(View.GONE);
-                        layoutError.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
-                        txtErrorMessage.setText(e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        progressBar.setVisibility(View.GONE);
-                        movieAdapter.notifyDataSetChanged();
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }
-                });
     }
 
     private void showMovies(String sort) {
@@ -190,10 +186,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                 .subscribe(new DisposableObserver<Movie>() {
                     @Override
                     public void onNext(Movie movie) {
-//                        progressBar.setVisibility(View.GONE);
                         movieImageList.add(movie.posterPath);
                         movieList.add(movie);
-//                        movieAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -209,8 +203,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                         progressBar.setVisibility(View.GONE);
                         movieAdapter.notifyDataSetChanged();
                         recyclerView.setVisibility(View.VISIBLE);
+                        recyclerView.setVerticalScrollbarPosition(scrollPosition);
+                        recyclerView.scrollToPosition(scrollPosition);
                     }
                 });
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_SORT, sort);
+        outState.putInt(STATE_SCROLL_POSITION,
+                ((GridLayoutManager) recyclerView.getLayoutManager())
+                        .findFirstCompletelyVisibleItemPosition());
+
+        super.onSaveInstanceState(outState);
+    }
 }

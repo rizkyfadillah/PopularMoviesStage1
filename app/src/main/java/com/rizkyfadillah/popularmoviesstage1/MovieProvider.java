@@ -111,7 +111,8 @@ public class MovieProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         final SQLiteDatabase db = mMovieDbHelper.getWritableDatabase();
 
         int match = sUriMatcher.match(uri);
@@ -136,7 +137,9 @@ public class MovieProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @Nullable ContentValues values,
+                      @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         return 0;
     }
 
