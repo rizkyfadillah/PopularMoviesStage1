@@ -2,6 +2,7 @@ package com.rizkyfadillah.popularmoviesstage1.ui.detail;
 
 import com.rizkyfadillah.popularmoviesstage1.di.ActivityScope;
 
+import dagger.Component;
 import dagger.Subcomponent;
 
 /**

@@ -15,7 +15,7 @@ public class MainActivityModule {
 
     @Provides
     @ActivityScope
-    MainViewModel provideMainViewModel(MovieRepository movieRepository) {
+    static MainViewModel provideMainViewModel(MovieRepository movieRepository) {
         return new MainViewModel(movieRepository);
     }
 

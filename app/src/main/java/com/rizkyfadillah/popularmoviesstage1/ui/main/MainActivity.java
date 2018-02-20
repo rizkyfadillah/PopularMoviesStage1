@@ -102,8 +102,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
 
     private void setupActivityComponent() {
         PopularMoviesStage1App.get()
-                .getAppComponent()
-                .plus(new MainActivityModule())
+                .getMainActivityComponent()
                 .inject(this);
     }
 
@@ -183,11 +182,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
         movieAdapter.notifyDataSetChanged();
 
         viewmodel.getMovies(sort)
-                .subscribe(new DisposableObserver<Movie>() {
+                .subscribe(new DisposableObserver<List<Movie>>() {
                     @Override
-                    public void onNext(Movie movie) {
-                        movieImageList.add(movie.posterPath);
-                        movieList.add(movie);
+                    public void onNext(List<Movie> movies) {
+                        List<String> posterPaths = new ArrayList<>();
+                        for (Movie movie : movies) {
+                            posterPaths.add(movie.posterPath);
+                        }
+                        movieImageList.clear();
+                        movieImageList.addAll(posterPaths);
                     }
 
                     @Override

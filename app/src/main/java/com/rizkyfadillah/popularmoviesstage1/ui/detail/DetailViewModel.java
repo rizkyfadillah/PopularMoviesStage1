@@ -25,8 +25,8 @@ public class DetailViewModel {
         this.movieRepository = movieRepository;
     }
 
-    Observable<Boolean> addFavoriteMovie2(Movie movie) {
-        return movieRepository.addFavoriteMovie2(movie)
+    Observable<Boolean> addFavoriteMovie(Movie movie) {
+        return movieRepository.addFavoriteMovie(movie)
                 .map(new Function<Uri, Boolean>() {
                     @Override
                     public Boolean apply(@NonNull Uri uri) throws Exception {

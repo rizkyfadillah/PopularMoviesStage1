@@ -13,7 +13,10 @@ import com.rizkyfadillah.popularmoviesstage1.vo.Movie;
 import com.rizkyfadillah.popularmoviesstage1.vo.Review;
 import com.rizkyfadillah.popularmoviesstage1.vo.Video;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -31,26 +34,25 @@ import io.reactivex.schedulers.Schedulers;
 public class MovieRepository {
 
     private final MovieDBService service;
-    private final SQLiteDatabase database;
     private final Context context;
 
-    public MovieRepository(MovieDBService service, SQLiteDatabase database, Context context) {
+    @Inject
+    public MovieRepository(MovieDBService service, Context context) {
         this.service = service;
-        this.database = database;
         this.context = context;
     }
 
-    public Observable<Movie> getMovies(String sort) {
+    public Observable<List<Movie>> getMovies(String sort) {
         if (sort.equals("favorite")) {
             return getFavoriteMovies();
         } else {
             return service.getMovies(sort)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .flatMapIterable(new Function<BaseApiResponse<List<Movie>>, Iterable<? extends Movie>>() {
+                    .map(new Function<BaseApiResponse<List<Movie>>, List<Movie>>() {
                         @Override
-                        public Iterable<? extends Movie> apply(BaseApiResponse<List<Movie>> response) throws Exception {
-                            return response.results;
+                        public List<Movie> apply(BaseApiResponse<List<Movie>> listBaseApiResponse) throws Exception {
+                            return listBaseApiResponse.results;
                         }
                     });
         }
@@ -80,26 +82,7 @@ public class MovieRepository {
                 });
     }
 
-    public Observable<Long> addFavoriteMovie(final Movie movie) {
-        return Observable.create(new ObservableOnSubscribe<Long>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<Long> e) throws Exception {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(MovieContract.MovieEntry._ID, movie.id);
-                contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movie.originalTitle);
-                contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSTER, movie.posterPath);
-                contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_BACKDROP, movie.backdropPath);
-                contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, movie.overview);
-                contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT, movie.voteCount);
-                contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE, movie.voteAverage);
-                contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE, movie.releaseDate);
-                e.onNext(database.insertWithOnConflict(MovieContract.MovieEntry.TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE));
-                e.onComplete();
-            }
-        });
-    }
-
-    public Observable<Uri> addFavoriteMovie2(final Movie movie) {
+    public Observable<Uri> addFavoriteMovie(final Movie movie) {
         return Observable.create(new ObservableOnSubscribe<Uri>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Uri> e) throws Exception {
@@ -118,17 +101,18 @@ public class MovieRepository {
         });
     }
 
-    public Observable<Movie> getFavoriteMovies() {
+    private Observable<List<Movie>> getFavoriteMovies() {
         final Cursor cursor = context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
                 null,
                 null,
                 null,
                 null);
 
-        return Observable.create(new ObservableOnSubscribe<Movie>() {
+        return Observable.create(new ObservableOnSubscribe<List<Movie>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<Movie> e) throws Exception {
+            public void subscribe(@NonNull ObservableEmitter<List<Movie>> e) throws Exception {
                 if (cursor != null) {
+                    List<Movie> movies = new ArrayList<>();
                     while (cursor.moveToNext()) {
                         Movie movie = new Movie();
                         movie.id = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry._ID));
@@ -139,8 +123,9 @@ public class MovieRepository {
                         movie.voteCount = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_COUNT));
                         movie.voteAverage = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_VOTE_AVERAGE));
                         movie.releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_RELEASE_DATE));
-                        e.onNext(movie);
+                        movies.add(movie);
                     }
+                    e.onNext(movies);
                     cursor.close();
                     e.onComplete();
                 }
@@ -183,4 +168,5 @@ public class MovieRepository {
                 null,
                 null);
     }
+
 }
