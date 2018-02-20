@@ -10,12 +10,13 @@ public class TestApp extends PopularMoviesStage1App {
 
     private MainActivityComponent mainActivityComponent;
 
+    public void setMainActivityComponent(MainActivityComponent mainActivityComponent) {
+        this.mainActivityComponent = mainActivityComponent;
+    }
+
     @Override
     public MainActivityComponent getMainActivityComponent() {
         return mainActivityComponent;
     }
 
-    public void setMainActivityComponent(MainActivityComponent mainActivityComponent) {
-        this.mainActivityComponent = mainActivityComponent;
-    }
 }

@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.BindsInstance;
 import dagger.Component;
 import io.reactivex.Observable;
 
@@ -29,6 +30,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.not;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -37,7 +39,6 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
-    @Inject
     MainViewModel mainViewModel;
 
     @Rule
@@ -48,10 +49,15 @@ public class MainActivityTest {
     );
 
     @ActivityScope
-    @Component(modules = MockMainActivityModule.class)
+    @Component
     public interface MainActivityTestComponent extends MainActivityComponent {
 
-        void inject(MainActivityTest mainActivityTest);
+        @Component.Builder
+        interface Builder {
+            MainActivityTestComponent build();
+
+            @BindsInstance Builder mainViewModel(MainViewModel mainViewModel);
+        }
 
     }
 
@@ -61,14 +67,15 @@ public class MainActivityTest {
 
         TestApp testApp = (TestApp) instrumentation.getTargetContext().getApplicationContext();
 
+        mainViewModel = mock(MainViewModel.class);
+
         MainActivityTestComponent mainActivityTestComponent =
                 DaggerMainActivityTest_MainActivityTestComponent
                         .builder()
+                        .mainViewModel(mainViewModel)
                         .build();
 
         testApp.setMainActivityComponent(mainActivityTestComponent);
-
-        mainActivityTestComponent.inject(this);
     }
 
     @Test
