@@ -65,6 +65,7 @@ public class MainActivityTest {
                 DaggerMainActivityTest_MainActivityTestComponent
                         .builder()
                         .build();
+
         testApp.setMainActivityComponent(mainActivityTestComponent);
 
         mainActivityTestComponent.inject(this);
