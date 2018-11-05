@@ -18,13 +18,13 @@ class DbModule {
 
     @Provides
     @Singleton
-    MovieDbHelper provideMovieDbHelper(Context context) {
+    static MovieDbHelper provideMovieDbHelper(Context context) {
         return new MovieDbHelper(context);
     }
 
     @Provides
     @Singleton
-    SQLiteDatabase provideSQLiteDatabase(MovieDbHelper movieDbHelper) {
+    static SQLiteDatabase provideSQLiteDatabase(MovieDbHelper movieDbHelper) {
         return movieDbHelper.getWritableDatabase();
     }
 

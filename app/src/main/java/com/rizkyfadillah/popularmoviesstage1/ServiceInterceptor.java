@@ -12,6 +12,7 @@ import okhttp3.Response;
  */
 
 public class ServiceInterceptor implements Interceptor {
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
@@ -26,4 +27,5 @@ public class ServiceInterceptor implements Interceptor {
 
         return chain.proceed(request);
     }
+
 }

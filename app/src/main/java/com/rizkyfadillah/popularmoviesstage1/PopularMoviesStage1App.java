@@ -5,6 +5,8 @@ import android.app.Application;
 import com.rizkyfadillah.popularmoviesstage1.di.AppComponent;
 import com.rizkyfadillah.popularmoviesstage1.di.AppModule;
 import com.rizkyfadillah.popularmoviesstage1.di.DaggerAppComponent;
+import com.rizkyfadillah.popularmoviesstage1.ui.main.MainActivityComponent;
+import com.rizkyfadillah.popularmoviesstage1.ui.main.MainActivityModule;
 
 import timber.log.Timber;
 
@@ -15,7 +17,7 @@ import timber.log.Timber;
 
 public class PopularMoviesStage1App extends Application {
 
-    private AppComponent appComponent = createAppComponent();
+    private AppComponent appComponent;
 
     private static PopularMoviesStage1App instance;
 
@@ -25,6 +27,10 @@ public class PopularMoviesStage1App extends Application {
 
         Timber.plant(new Timber.DebugTree());
 
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
+
         instance = this;
     }
 
@@ -32,13 +38,12 @@ public class PopularMoviesStage1App extends Application {
         return instance;
     }
 
-    protected AppComponent createAppComponent() {
-        return appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
-    }
-
     public AppComponent getAppComponent() {
         return appComponent;
     }
+
+    public MainActivityComponent getMainActivityComponent() {
+        return appComponent.plus(new MainActivityModule());
+    }
+
 }

@@ -17,8 +17,7 @@ import dagger.Component;
 @Component(
         modules = {
                 AppModule.class,
-                MovieDBApiModule.class,
-                DataModule.class
+                MovieDBApiModule.class
         })
 public interface AppComponent {
 

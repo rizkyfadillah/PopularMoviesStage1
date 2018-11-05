@@ -172,7 +172,7 @@ public class DetailMovieActivity extends AppCompatActivity {
                     if (detailViewModel.isMovieFavorite(id)) {
                         deleteFavoriteMovie(id);
                     } else {
-                        saveFavoriteMovie2(movie);
+                        saveFavoriteMovie(movie);
                     }
                 }
             });
@@ -204,8 +204,8 @@ public class DetailMovieActivity extends AppCompatActivity {
                 });
     }
 
-    private void saveFavoriteMovie2(Movie movie) {
-        detailViewModel.addFavoriteMovie2(movie)
+    private void saveFavoriteMovie(Movie movie) {
+        detailViewModel.addFavoriteMovie(movie)
                 .subscribe(new DisposableObserver<Boolean>() {
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
