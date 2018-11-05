@@ -45,4 +45,5 @@ public class PopularMoviesStage1App extends Application {
     public MainActivityComponent getMainActivityComponent() {
         return appComponent.plus(new MainActivityModule());
     }
+
 }

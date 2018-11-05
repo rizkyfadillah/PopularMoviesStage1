@@ -29,7 +29,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.observers.DisposableObserver;
-import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnClickMovieListener {
 
@@ -191,6 +190,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnCl
                         }
                         movieImageList.clear();
                         movieImageList.addAll(posterPaths);
+                        movieList.clear();
+                        movieList.addAll(movies);
                     }
 
                     @Override

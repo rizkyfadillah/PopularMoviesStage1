@@ -19,8 +19,6 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import dagger.BindsInstance;
 import dagger.Component;
 import io.reactivex.Observable;
@@ -39,7 +37,7 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
-    MainViewModel mainViewModel;
+    private MainViewModel mainViewModel;
 
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(

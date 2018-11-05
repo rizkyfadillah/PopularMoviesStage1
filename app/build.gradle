@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '26.0.3'
     defaultConfig {
         applicationId "com.rizkyfadillah.popularmoviesstage1"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "com.rizkyfadillah.popularmoviesstage1.TestRunner"
@@ -37,8 +37,8 @@ dependencies {
     compile "com.android.support:design:$support_version"
 
     //RxJava
-    compile 'io.reactivex.rxjava2:rxjava:2.1.7'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.13'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
     compile 'com.facebook.stetho:stetho:1.5.0'
 
