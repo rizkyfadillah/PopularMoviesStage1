@@ -2,4 +2,4 @@
 
 This project is for Android Fast Track Scholarship Program.
 
-Tech-stack: MVVM, RxJava 2, Dagger 2, SQLite, Butter Knife
+Tech-stack: MVVM, RxJava 2, Dagger 2, SQLite, Butter Knife, ContentProvider, SQLite
