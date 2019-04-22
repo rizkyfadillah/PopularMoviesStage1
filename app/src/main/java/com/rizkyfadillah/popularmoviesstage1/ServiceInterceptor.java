@@ -18,7 +18,7 @@ public class ServiceInterceptor implements Interceptor {
         Request request = chain.request();
 
         HttpUrl url = request.url().newBuilder()
-                .addQueryParameter("api_key", BuildConfig.THE_MOVIE_DB_API_TOKEN)
+                .addQueryParameter("api_key", "")
                 .build();
 
         request = request.newBuilder()
