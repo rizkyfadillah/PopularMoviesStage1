@@ -27,7 +27,7 @@ class MovieDBApiModule {
     static OkHttpClient provideOkhttpClient() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
+        // add some comments
         return new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(new ServiceInterceptor())
